@@ -76,12 +76,22 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator.Filter
                 ItemType itemType = this.systemCharacteristics.GetSystemDataByReferenceId(id);
                 StateType state = this.GetStateById(filterValue);
                 StateTypeComparator comparator = new StateTypeComparator(state, itemType,this.variables);
-                if (!comparator.IsEquals())
+                if (comparator.IsEquals())
                 {
-                    this.AddObjectTypeInList(objectType, objectTypesAfterFilter);
+                    RemoveReferenceID(objectType, id);
+                }
+                else
+                {
+                    AddObjectTypeInList(objectType, objectTypesAfterFilter);
                 }
             }
             return objectTypesAfterFilter;
+        }
+
+        private void RemoveReferenceID(sc.ObjectType objectType, string id)
+        {
+            var refs = objectType.reference.ToList(); refs.RemoveAll(e => e.item_ref == id);
+            objectType.reference = refs.ToArray();
         }
 
         private StateType GetStateById(string stateId)
