@@ -73,70 +73,68 @@ namespace Modulo.Collect.GraphicalConsole
 
         private void View_OnXCCDF(object sender, OnXCCDFEventArgs e)
         {
-            Task.Factory.StartNew(() =>
+            var doc = new XmlDocument();
+            doc.Load(e.Filename);
+            var nav = doc.CreateNavigator();
+
+            var ns = new XmlNamespaceManager(doc.NameTable);
+            ns.AddNamespace("xccdf", "http://checklists.nist.gov/xccdf/1.2");
+
+            var helper = new ExternalVariableHelper();
+            var dic = new Dictionary<string, string>();
+
+            var controlDic = Controls.ToDictionary(c => c.Name, c => c);
+
+            GetValues(dic, helper);
+
+            float step = 1.0f / dic.Count;
+            foreach (var item in dic.ToArray())
             {
-                var doc = new XmlDocument();
-                doc.Load(e.Filename);
-                var nav = doc.CreateNavigator();
-
-                var ns = new XmlNamespaceManager(doc.NameTable);
-                ns.AddNamespace("xccdf", "http://checklists.nist.gov/xccdf/1.2");
-
-                var helper = new ExternalVariableHelper();
-                var dic = new Dictionary<string, string>();
-
-                var controlDic = Controls.ToDictionary(c => c.Name, c => c);
-
-                GetValues(dic, helper);
-
-                float step = 1.0f / dic.Count;
-                foreach (var item in dic.ToArray())
+                try
                 {
-                    try
+                    var value = nav.Evaluate("string(//xccdf:Value[@id= string(//xccdf:check-export[@export-name='" + item.Key + "']/@value-id)]/xccdf:value)", ns);
+                    dic[item.Key] = value.ToString();
+
+                    var control = controlDic[item.Key];
+
+                    if (control is NumericUpDown)
                     {
-                        var value = nav.Evaluate("string(//xccdf:Value[@id= string(//xccdf:check-export[@export-name='" + item.Key + "']/@value-id)]/xccdf:value)", ns);
-                        dic[item.Key] = value.ToString();
-
-                        var control = controlDic[item.Key];
-
-                        if (control is NumericUpDown)
+                        control.Invoke(new Action(() =>
                         {
-                            control.Invoke(new Action(() =>
-                            {
-                                (control as NumericUpDown).Value = decimal.Parse(value.ToString());
-                            }));
-                        }
-                        else if (control is TextBox)
-                        {
-                            control.Invoke(new Action(() =>
-                            {
-                                (control as TextBox).Text = value.ToString();
-                            }));
-                        }
-                        else if (control is CheckBox)
-                        {
-                            if (value.ToString() == "1") { value = "true"; }
-                            if (value.ToString() == "0") { value = "false"; }
-                            control.Invoke(new Action(() =>
-                            {
-                                (control as CheckBox).Checked = bool.Parse(value.ToString());
-                            }));
-                        }
-                        else
-                        {
-
-                        }
+                            (control as NumericUpDown).Value = decimal.Parse(value.ToString());
+                        }));
                     }
-                    catch
+                    else if (control is TextBox)
+                    {
+                        control.Invoke(new Action(() =>
+                        {
+                            (control as TextBox).Text = value.ToString();
+                        }));
+                    }
+                    else if (control is CheckBox)
+                    {
+                        if (value.ToString() == "1") { value = "true"; }
+                        if (value.ToString() == "0") { value = "false"; }
+                        control.Invoke(new Action(() =>
+                        {
+                            (control as CheckBox).Checked = bool.Parse(value.ToString());
+                        }));
+                    }
+                    else
                     {
 
                     }
+                }
+                catch
+                {
 
-                    view.Progress += step;
                 }
 
-                view.Progress = 0;
-            });
+                view.Progress += step;
+            }
+
+            view.Progress = 0;
+            
         }
 
 
