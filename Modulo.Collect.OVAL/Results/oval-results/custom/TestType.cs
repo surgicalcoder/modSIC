@@ -42,12 +42,14 @@ using Modulo.Collect.OVAL.SystemCharacteristics;
 using Modulo.Collect.OVAL.Definitions.VariableEvaluators;
 using Modulo.Collect.OVAL.Definitions.variableEvaluator;
 using System;
+using NLog;
 
 namespace Modulo.Collect.OVAL.Results
 {
   
     public partial class TestType
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
         public TestType(Definitions.TestType test) : this()
         {
             this.test_id = test.id;
@@ -60,84 +62,92 @@ namespace Modulo.Collect.OVAL.Results
         bool bAnalyzed = false;
         public ResultEnumeration Analyze(oval_results results)
         {
-            if (!bAnalyzed)
+            try
             {
-                var refTest = results.oval_definitions.tests.Single(x => x.id == test_id);
-                if (!refTest.HasObjectReference)
+                if (!bAnalyzed)
                 {
-                    return ResultEnumeration.unknown;
-                }
-                var fi = refTest.GetType().GetProperty("object");
-                ObjectRefType objRef = fi.GetValue(refTest,null) as ObjectRefType;
-                var sc = results.results[0].oval_system_characteristics;
-                var colObject = sc.collected_objects.SingleOrDefault(x => x.id == objRef.object_ref);
-                if (colObject == null)
-                {
-                    result = ResultEnumeration.notevaluated;
-                }
-                else
-                {
-                    // Copy all Referenced Items to result
-                    if (colObject.reference != null)
+                    var refTest = results.oval_definitions.tests.Single(x => x.id == test_id);
+                    if (!refTest.HasObjectReference)
                     {
-                        foreach (var itemKey in colObject.reference)
+                        return ResultEnumeration.unknown;
+                    }
+                    var fi = refTest.GetType().GetProperty("object");
+                    ObjectRefType objRef = fi.GetValue(refTest,null) as ObjectRefType;
+                    var sc = results.results[0].oval_system_characteristics;
+                    var colObject = sc.collected_objects.SingleOrDefault(x => x.id == objRef.object_ref);
+                    if (colObject == null)
+                    {
+                        result = ResultEnumeration.notevaluated;
+                    }
+                    else
+                    {
+                        // Copy all Referenced Items to result
+                        if (colObject.reference != null)
                         {
-                            var item = sc.system_data.Single(x => x.id == itemKey.item_ref);
-                            
-                            var newMessageType = item.message == null ? new MessageType[] { } :  item.message;
-                            var newTestedItemType = new TestedItemType()
+                            foreach (var itemKey in colObject.reference)
                             {
-                                item_id = item.id,
-                                message = newMessageType.ToList(),
-                                status = item.status,
-                                result = ResultEnumeration.notevaluated
-                            };
+                                var item = sc.system_data.Single(x => x.id == itemKey.item_ref);
+                            
+                                var newMessageType = item.message == null ? new MessageType[] { } :  item.message;
+                                var newTestedItemType = new TestedItemType()
+                                {
+                                    item_id = item.id,
+                                    message = newMessageType.ToList(),
+                                    status = item.status,
+                                    result = ResultEnumeration.notevaluated
+                                };
 
-                            tested_item.Add(newTestedItemType);
+                                tested_item.Add(newTestedItemType);
+                            }
                         }
-                    }
-                    // Copy all Referenced Items to result
-                    if (colObject.variable_value != null)
-                    {
-                        foreach (var varKey in colObject.variable_value)
+                        // Copy all Referenced Items to result
+                        if (colObject.variable_value != null)
                         {
-                            tested_variable.Add(new TestedVariableType() { variable_id = varKey.variable_id, Value = varKey.Value });
+                            foreach (var varKey in colObject.variable_value)
+                            {
+                                tested_variable.Add(new TestedVariableType() { variable_id = varKey.variable_id, Value = varKey.Value });
+                            }
+                        }
+
+                        switch (colObject.flag)
+                        {
+                            case FlagEnumeration.error:
+                                result = ResultEnumeration.error;
+                                break;
+                            case FlagEnumeration.notapplicable:
+                                result = ResultEnumeration.notapplicable;
+                                break;
+                            case FlagEnumeration.notcollected:
+                                result = ResultEnumeration.unknown;
+                                break;
+                            case FlagEnumeration.doesnotexist:
+                                if ((check_existence == ExistenceEnumeration.none_exist) || (check_existence == ExistenceEnumeration.any_exist))
+                                    result = ResultEnumeration.@true;
+                                else
+                                    result = ResultEnumeration.@false;
+                                break;
+                            case FlagEnumeration.complete:
+                                ResultEnumeration completeResult = GetCheckExistenceResult();
+                            
+                                if (completeResult == ResultEnumeration.@true)
+                                    if (IsThereReferenceStateForTest(refTest))
+                                        completeResult = GetCheckStateResult(results, refTest);
+                            
+                                result = completeResult;
+                            
+                                break;
                         }
                     }
-
-                    switch (colObject.flag)
-                    {
-                        case SystemCharacteristics.FlagEnumeration.error:
-                            result = ResultEnumeration.error;
-                            break;
-                        case SystemCharacteristics.FlagEnumeration.notapplicable:
-                            result = ResultEnumeration.notapplicable;
-                            break;
-                        case SystemCharacteristics.FlagEnumeration.notcollected:
-                            result = ResultEnumeration.unknown;
-                            break;
-                        case SystemCharacteristics.FlagEnumeration.doesnotexist:
-                            if ((check_existence == ExistenceEnumeration.none_exist) || (check_existence == ExistenceEnumeration.any_exist))
-                                result = ResultEnumeration.@true;
-                            else
-                                result = ResultEnumeration.@false;
-                            break;
-                        case FlagEnumeration.complete:
-                            ResultEnumeration completeResult = GetCheckExistenceResult();
-                            
-                            if (completeResult == ResultEnumeration.@true)
-                                if (IsThereReferenceStateForTest(refTest))
-                                    completeResult = GetCheckStateResult(results, refTest);
-                            
-                            result = completeResult;
-                            
-                            break;
-                    }
+                    bAnalyzed = true;
                 }
-                bAnalyzed = true;
-            }
-            return result;
+                return result;
 
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("Error during TestType", e);
+                throw;
+            }
         }
 
         private bool IsThereReferenceStateForTest(Definitions.TestType test)
