@@ -61,8 +61,17 @@ namespace Modulo.Collect.Probe.Windows
                 username = targetInfo.credentials.GetFullyQualifiedUsername();
                 password = targetInfo.credentials.GetPassword();
             }
-            
-            var connectionOptions = CreateConnectionOptions(username, password);
+
+            ConnectionOptions connectionOptions;
+
+            if (targetInfo.IsLocalTarget())
+            {
+                connectionOptions = new ConnectionOptions();
+            }
+            else
+            {
+                connectionOptions = CreateConnectionOptions(username, password);
+            }
 
             var wmiConnectionScope = new ManagementScope(wmiNamespace, connectionOptions);
             wmiConnectionScope.Connect();
