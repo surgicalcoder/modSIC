@@ -53,7 +53,7 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator.operations
                 case SetOperatorEnumeration.UNION:
                     return new UnionSetOperation();
                 default:
-                    throw new NotImplementedException(string.Format("There is no implementation for this OVAL entity operation: '{0}'",operation.ToString()));
+                    throw new NotImplementedException($"There is no implementation for this OVAL entity operation: '{operation}'");
             }
         }
     }
