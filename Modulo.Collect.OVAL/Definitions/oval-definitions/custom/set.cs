@@ -87,15 +87,9 @@ namespace Modulo.Collect.OVAL.Definitions
         /// Get the list of references for the objects in the Set.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> GetObjectReferences()
+        public List<string> GetObjectReferences()
         {
-            List<string> references = new List<string>();
-            foreach (var item in this.Items)
-            {
-                if (item is string)
-                    references.Add((string)item);
-            }
-            return references;
+            return this.Items.OfType<string>().ToList();
         }
 
 

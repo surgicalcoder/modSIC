@@ -84,7 +84,7 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator
         private SetResult EvaluateSetElement(set setElement)
         {
             List<string> results = new List<string>();
-            IEnumerable<string> objectReferences = setElement.GetObjectReferences();
+            List<string> objectReferences = setElement.GetObjectReferences();
             IEnumerable<sc.ObjectType> objectTypes = this.GetSystemCharacteristicsObjectType(objectReferences);
             if (objectTypes.Count() > 0)
             {
