@@ -86,7 +86,7 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator
             List<string> results = new List<string>();
             List<string> objectReferences = setElement.GetObjectReferences();
             IEnumerable<sc.ObjectType> objectTypes = this.GetSystemCharacteristicsObjectType(objectReferences);
-            if (objectTypes.Count() > 0)
+            if (objectTypes.Any())
             {
                 if (setElement.HasFilterElement())
                 {
