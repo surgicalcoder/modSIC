@@ -31,3 +31,5 @@ packages/
 *.ncrunchsolution
 _NCrunch*
 /UpgradeLog.htm
+
+\.vs/
