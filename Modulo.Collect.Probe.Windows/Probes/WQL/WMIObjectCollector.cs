@@ -86,7 +86,7 @@ namespace Modulo.Collect.Probe.Windows.WQL
         {
             if (this.WmiDataProvider == null)
             {
-                var wmiNamespace = String.Format(@"{0}\{1}", this.TargetInfo.GetAddress(), wmiItem.@namespace.Value);
+                var wmiNamespace = $@"\\{this.TargetInfo.GetAddress()}\{wmiItem.@namespace.Value}";
                 var wmiNamespacePath = new System.Management.ManagementPath(wmiNamespace);
                 var wmiConnectionOptions = WmiDataProviderFactory.CreateConnectionOptions(this.TargetInfo);
                 var wmiManagementScope = new System.Management.ManagementScope(wmiNamespacePath, wmiConnectionOptions);
