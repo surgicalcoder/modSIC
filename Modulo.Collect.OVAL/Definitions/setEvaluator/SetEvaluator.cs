@@ -107,7 +107,7 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator
         /// <returns></returns>
         private SetResult EvaluateOtherSets(set setElement)
         {
-            IEnumerable<set> otherSetsElements = setElement.GetSets();
+            List<set> otherSetsElements = setElement.GetSets();
             SetResult resultFirstSet = this.Evaluate(otherSetsElements.First());
             SetResult resultSecondSet = new SetResult(new List<String>(), FlagEnumeration.notcollected);
             //the max number of set is 2 (reference: oval_definitions schema)

@@ -97,16 +97,9 @@ namespace Modulo.Collect.OVAL.Definitions
         /// This method return all the sets that defined in the a SetObject.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<set> GetSets()
+        public List<set> GetSets()
         {
-            List<set> sets = new List<set>();
-            foreach (var item in this.Items)
-            {
-                if (item is set)
-                    sets.Add((set)item);
-            }
-            return sets;
-            
+            return this.Items.OfType<set>().ToList();
         }
         /// <summary>
         /// This method verifies if exists a Set element configured in the current set.
