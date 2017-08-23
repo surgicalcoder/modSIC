@@ -113,7 +113,7 @@ namespace Modulo.Collect.Service
             catch (Exception ex)
             {
                 var logMessage = String.Format(EXECUTION_ERROR_MESSAGE, ex.Message, ex.StackTrace);
-                Logger.Error(logMessage);
+                Logger.ErrorException(logMessage, ex);
                 result.HasErrors = true;
                 result.Message = ex.Message;
             }
@@ -135,7 +135,7 @@ namespace Modulo.Collect.Service
             catch (Exception ex)
             {
                 var logMessage = String.Format(EXECUTION_ERROR_MESSAGE, ex.Message, ex.StackTrace);
-                Logger.Error(logMessage);
+                Logger.ErrorException(logMessage, ex);
                 throw new FaultException(ex.Message);
             }
         }
@@ -154,7 +154,7 @@ namespace Modulo.Collect.Service
             catch (Exception ex)
             {
                 var logMessage = String.Format(EXECUTION_ERROR_MESSAGE, ex.Message, ex.StackTrace);
-                Logger.Error(logMessage);
+                Logger.ErrorException(logMessage, ex);
                 throw new FaultException(ex.Message);
             }
         }
@@ -173,7 +173,7 @@ namespace Modulo.Collect.Service
             catch (Exception ex)
             {
                 var logMessage = String.Format(EXECUTION_ERROR_MESSAGE, ex.Message, ex.StackTrace);
-                Logger.Error(logMessage);
+                Logger.ErrorException(logMessage, ex);
                 throw new FaultException(ex.Message);
             }
         }
@@ -192,7 +192,7 @@ namespace Modulo.Collect.Service
             catch (Exception ex)
             {
                 var logMessage = String.Format(EXECUTION_ERROR_MESSAGE, ex.Message, ex.StackTrace);
-                Logger.Error(logMessage);
+                Logger.ErrorException(logMessage, ex);
                 throw new FaultException(ex.Message);
             }
         }
@@ -211,7 +211,7 @@ namespace Modulo.Collect.Service
             catch (Exception ex)
             {
                 var logMessage = String.Format(EXECUTION_ERROR_MESSAGE, ex.Message, ex.StackTrace);
-                Logger.Error(logMessage);
+                Logger.ErrorException(logMessage, ex);
                 throw new FaultException(ex.Message);
             }
         }
@@ -230,7 +230,7 @@ namespace Modulo.Collect.Service
             catch (Exception ex)
             {
                 var logMessage = String.Format(EXECUTION_ERROR_MESSAGE, ex.Message, ex.StackTrace);
-                Logger.Error(logMessage);
+                Logger.ErrorException(logMessage, ex);
                 throw new FaultException(ex.Message);
             }
         }
@@ -249,7 +249,7 @@ namespace Modulo.Collect.Service
             catch (Exception ex)
             {
                 var logMessage = String.Format(EXECUTION_ERROR_MESSAGE, ex.Message, ex.StackTrace);
-                Logger.Error(logMessage);
+                Logger.ErrorException(logMessage, ex);
                 throw new FaultException(ex.Message);
             }
         }
@@ -312,7 +312,7 @@ namespace Modulo.Collect.Service
             catch (Exception ex)
             {
                 var logMessage = String.Format(EXECUTION_ERROR_MESSAGE, ex.Message, ex.StackTrace);
-                Logger.Error(logMessage);
+                Logger.ErrorException(logMessage, ex);
                 throw new FaultException(ex.Message);
             }
         }
@@ -330,7 +330,7 @@ namespace Modulo.Collect.Service
             catch (Exception ex)
             {
                 var logMessage = String.Format(EXECUTION_ERROR_MESSAGE, ex.Message, ex.StackTrace);
-                Logger.Error(logMessage);
+                Logger.ErrorException(logMessage,ex);
                 return new TargetCheckingResult() { ErrorMessage = ex.Message, IsTargetAvailable = false };
             }
         }
