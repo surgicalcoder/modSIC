@@ -77,12 +77,12 @@ namespace Modulo.Collect.OVAL.Definitions.VariableEvaluators.Evaluators.LocalVar
             var values = new List<string>();
             if (SystemCharacteristics != null)
             {
-                var objectType = SystemCharacteristics.collected_objects.Where(obj => obj.id == objectId).SingleOrDefault();
+                var objectType = SystemCharacteristics.collected_objects.SingleOrDefault(obj => obj.id == objectId);
                 if ((objectType != null) && (objectType.reference != null))
                 {
                     foreach (var reference in objectType.reference)
                     {
-                        var itemType = SystemCharacteristics.system_data.Where(item => item.id == reference.item_ref).Single();
+                        var itemType = SystemCharacteristics.system_data.Single(item => item.id == reference.item_ref);
 
                         if (string.IsNullOrEmpty(recordFieldname))
                         {

@@ -83,19 +83,19 @@ namespace Modulo.Collect.OVAL.Helper
 
         private bool IsTargetCiscoIOSSystem()
         {
-            return (OvalDefinitionsObjectNamepaces.Where(ns => ns.Contains("#ios")).Count() > 0);
+            return (OvalDefinitionsObjectNamepaces.Any(ns => ns.Contains("#ios")));
         }
 
         private bool IsTargetWindowsSystem()
         {
-            return (OvalDefinitionsObjectNamepaces.Where(ns => ns.Contains("#windows")).Count() > 0);
+            return (OvalDefinitionsObjectNamepaces.Any(ns => ns.Contains("#windows")));
         }
 
         private bool IsTargetUnixSystem()
         {
-            var hasUnixNamespace = OvalDefinitionsObjectNamepaces.Where(ns => ns.Contains("#unix")).Count() > 0;
-            var hasLinuxNamespace = OvalDefinitionsObjectNamepaces.Where(ns => ns.Contains("#linux")).Count() > 0;
-            var hasSolarisNamespace = OvalDefinitionsObjectNamepaces.Where(ns => ns.Contains("#solaris")).Count() > 0;
+            var hasUnixNamespace = OvalDefinitionsObjectNamepaces.Any(ns => ns.Contains("#unix"));
+            var hasLinuxNamespace = OvalDefinitionsObjectNamepaces.Any(ns => ns.Contains("#linux"));
+            var hasSolarisNamespace = OvalDefinitionsObjectNamepaces.Any(ns => ns.Contains("#solaris"));
 
             return (hasUnixNamespace || hasLinuxNamespace || hasSolarisNamespace);
         }
