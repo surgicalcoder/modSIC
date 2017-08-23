@@ -96,13 +96,13 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator.Filter
 
         private StateType GetStateById(string stateId)
         {
-            StateType state = this.ovalDefinitionStates.Where(obj => obj.id == stateId).SingleOrDefault();
+            StateType state = this.ovalDefinitionStates.SingleOrDefault(obj => obj.id == stateId);
             return state;
         }
 
         private void AddObjectTypeInList(sc.ObjectType objectType, List<sc.ObjectType> objectTypes)
         {
-            sc.ObjectType existingObjectType = objectTypes.Where(obj => obj.id == objectType.id).SingleOrDefault();
+            sc.ObjectType existingObjectType = objectTypes.SingleOrDefault(obj => obj.id == objectType.id);
             if (existingObjectType == null)
             {
                 objectTypes.Add(objectType);
