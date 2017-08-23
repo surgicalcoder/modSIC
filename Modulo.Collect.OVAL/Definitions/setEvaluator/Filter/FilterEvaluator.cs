@@ -70,7 +70,7 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator.Filter
         private List<sc.ObjectType> ApplyFilterInObjectType(string filterValue, sc.ObjectType objectType)
         {
             List<sc.ObjectType> objectTypesAfterFilter = new List<sc.ObjectType>();
-            IEnumerable<string> referenceIds = objectType.GetReferenceTypesInString();
+            List<string> referenceIds = objectType.GetReferenceTypesInString();
             foreach (string id in referenceIds)
             {
                 ItemType itemType = this.systemCharacteristics.GetSystemDataByReferenceId(id);

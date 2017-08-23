@@ -47,14 +47,9 @@ namespace Modulo.Collect.OVAL.SystemCharacteristics
         /// Gets the reference types in a string list.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> GetReferenceTypesInString()
+        public List<string> GetReferenceTypesInString()
         {
-            List<string> referenceTypes = new List<string>();
-            foreach (ReferenceType referenceType in this.reference)
-            {
-                referenceTypes.Add(referenceType.item_ref);
-            }
-            return referenceTypes;
+            return this.reference.Select(referenceType => referenceType.item_ref).ToList();
         }
     }
 }
