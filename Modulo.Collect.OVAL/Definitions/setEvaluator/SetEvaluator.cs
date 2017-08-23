@@ -85,7 +85,7 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator
         {
             List<string> results = new List<string>();
             List<string> objectReferences = setElement.GetObjectReferences();
-            IEnumerable<sc.ObjectType> objectTypes = this.GetSystemCharacteristicsObjectType(objectReferences);
+            List<sc.ObjectType> objectTypes = this.GetSystemCharacteristicsObjectType(objectReferences);
             if (objectTypes.Any())
             {
                 if (setElement.HasFilterElement())
@@ -149,16 +149,9 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator
             return new SetOperationFactory().CreateSetOperation(setOperator);
         }
 
-        private IEnumerable<sc.ObjectType> GetSystemCharacteristicsObjectType(IEnumerable<string> objectReferences)
+        private List<sc.ObjectType> GetSystemCharacteristicsObjectType(IEnumerable<string> objectReferences)
         {
-            List<sc.ObjectType> objectTypes = new List<sc::ObjectType>();
-            foreach (string objectReference in objectReferences)
-            {
-                sc.ObjectType objectType = this.systemCharacteristics.GetCollectedObjectByID(objectReference);
-                if (objectType != null)
-                    objectTypes.Add(objectType);
-            }
-            return objectTypes;
+            return objectReferences.Select(objectReference => this.systemCharacteristics.GetCollectedObjectByID(objectReference)).Where(objectType => objectType != null).ToList();
         }
     }
 }

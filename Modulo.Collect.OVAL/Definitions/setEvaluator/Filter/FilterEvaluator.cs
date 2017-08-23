@@ -57,7 +57,7 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator.Filter
             this.variables = variables;
         }       
 
-        public IEnumerable<sc.ObjectType> ApplyFilter(IEnumerable<sc.ObjectType> objectTypes, string filterValue)
+        public List<sc.ObjectType> ApplyFilter(IEnumerable<sc.ObjectType> objectTypes, string filterValue)
         {
             List<sc.ObjectType> objectAfterFilter = new List<sc.ObjectType>();
             foreach (var objectType in objectTypes)
