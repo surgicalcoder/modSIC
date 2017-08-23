@@ -43,10 +43,7 @@ namespace Modulo.Collect.OVAL.Definitions.Unix
 {
     public partial class runlevel_object : ObjectType
     {
-        public override string ComponentString
-        {
-            get { return "runlevel"; }
-        }
+        public override string ComponentString => "runlevel";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {

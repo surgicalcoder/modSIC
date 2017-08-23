@@ -43,10 +43,7 @@ namespace Modulo.Collect.OVAL.Definitions.Unix
 {
     public partial class interface_object : ObjectType
     {
-        public override string ComponentString
-        {
-            get { return "interface"; }
-        }
+        public override string ComponentString => "interface";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {

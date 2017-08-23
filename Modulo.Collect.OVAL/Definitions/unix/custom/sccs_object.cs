@@ -43,10 +43,7 @@ namespace Modulo.Collect.OVAL.Definitions.Unix
 {
     public partial class sccs_object : ObjectType
     {
-        public override string ComponentString
-        {
-            get { return "sccs"; }
-        }
+        public override string ComponentString => "sccs";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {

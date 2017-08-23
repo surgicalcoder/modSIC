@@ -43,13 +43,7 @@ namespace Modulo.Collect.OVAL.Definitions.Solaris
 {
     public partial class smf_object : ObjectType
     {
-
-        
-
-        public override string ComponentString
-        {
-            get { return "smf"; }
-        }
+        public override string ComponentString => "smf";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {

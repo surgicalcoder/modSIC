@@ -43,10 +43,7 @@ namespace Modulo.Collect.OVAL.Definitions.Unix
 {
     public partial class uname_object : ObjectType
     {
-        public override string ComponentString
-        {
-            get { return "uname"; }
-        }
+        public override string ComponentString => "uname";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {

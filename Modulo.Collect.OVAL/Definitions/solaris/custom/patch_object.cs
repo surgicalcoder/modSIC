@@ -43,17 +43,11 @@ namespace Modulo.Collect.OVAL.Definitions.Solaris
 {
     public partial class patch_object : ObjectType
     {
-
-        public override string ComponentString
-        {
-            get { return "patch"; }
-        }
+        public override string ComponentString => "patch";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {
             return Enumerable.Empty<EntitySimpleBaseType>();
         }
-
-
     }
 }

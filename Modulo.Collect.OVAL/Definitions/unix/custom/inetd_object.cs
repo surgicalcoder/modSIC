@@ -43,10 +43,7 @@ namespace Modulo.Collect.OVAL.Definitions.Unix
 {
     public partial class inetd_object : ObjectType
     {
-        public override string ComponentString
-        {
-            get { return "inetd"; }
-        }
+        public override string ComponentString => "inetd";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {

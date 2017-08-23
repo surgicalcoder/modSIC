@@ -43,10 +43,7 @@ namespace Modulo.Collect.OVAL.Definitions.Unix
 {
     public partial class password_object : ObjectType
     {
-        public override string ComponentString
-        {
-            get { return "password"; }
-        }
+        public override string ComponentString => "password";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {

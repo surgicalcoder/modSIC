@@ -43,10 +43,7 @@ namespace Modulo.Collect.OVAL.Definitions.Unix
 {
     public partial class shadow_object : ObjectType
     {
-        public override string ComponentString
-        {
-            get { return "shadow"; }
-        }
+        public override string ComponentString => "shadow";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {

@@ -43,20 +43,11 @@ namespace Modulo.Collect.OVAL.Definitions.Solaris
 {
     public partial class package_object : ObjectType
     {
-
-        
-
-        public override string ComponentString
-        {
-            get { return "package"; }
-        }
+        public override string ComponentString => "package";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {
             return Enumerable.Empty<EntitySimpleBaseType>();
         }
-
-      
-
     }
 }

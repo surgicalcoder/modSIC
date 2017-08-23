@@ -40,10 +40,7 @@ namespace Modulo.Collect.OVAL.Definitions.Unix
 {
     public partial class file_object : ObjectType
     {
-        public override string ComponentString
-        {
-            get { return "file"; }
-        }
+        public override string ComponentString => "file";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {
@@ -103,7 +100,7 @@ namespace Modulo.Collect.OVAL.Definitions.Unix
             if (!pathValue.EndsWith("/"))
                 pathValue += "/";
 
-            return String.Format("{0}{1}", pathValue, filenameValue);
+            return $"{pathValue}{filenameValue}";
         }
 
         private EntityObjectStringType getFilepathEntity()

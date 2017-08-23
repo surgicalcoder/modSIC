@@ -43,10 +43,7 @@ namespace Modulo.Collect.OVAL.Definitions.Unix
 {
     public partial class process_object : ObjectType
     {
-        public override string ComponentString
-        {
-            get { return "process"; }
-        }
+        public override string ComponentString => "process";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {
