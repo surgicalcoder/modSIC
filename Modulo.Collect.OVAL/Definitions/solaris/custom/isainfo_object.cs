@@ -43,13 +43,7 @@ namespace Modulo.Collect.OVAL.Definitions.Solaris
 {
    public partial class isainfo_object : ObjectType
     {
-
-        
-
-        public override string ComponentString
-        {
-            get { return "isainfo"; }
-        }
+        public override string ComponentString => "isainfo";
 
         public override IEnumerable<EntitySimpleBaseType> GetEntityBaseTypes()
         {
