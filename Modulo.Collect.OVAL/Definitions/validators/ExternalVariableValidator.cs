@@ -49,7 +49,7 @@ namespace Modulo.Collect.OVAL.Definitions.validators
             if (externalVariable.HasPossibleRestriction())
             {
                 messages.AddRange(this.VerifyRestrictions(value, externalVariable));
-                if (messages.Count() > 0)
+                if (messages.Any())
                 {
                     if (this.TheValueExistsInPossibleValues(value, possibleValues))
                         messages.Clear();
@@ -65,16 +65,16 @@ namespace Modulo.Collect.OVAL.Definitions.validators
         private IEnumerable<string> VerifyPossibleValues(string value, IEnumerable<PossibleValueType> possibleValues)
         {
             List<string> messages = new List<string>();
-            if ((possibleValues.Count() > 0) && (!this.TheValueExistsInPossibleValues(value, possibleValues)))
+            if ((possibleValues.Any()) && (!this.TheValueExistsInPossibleValues(value, possibleValues)))
             {
-                messages.Add(string.Format("The value {0} is not in the range the possible values", value));
+                messages.Add($"The value {value} is not in the range the possible values");
             }
             return messages;
         }       
 
         private bool TheValueExistsInPossibleValues(string value, IEnumerable<PossibleValueType> possibleValues)
         {
-            return possibleValues.Where(pv => pv.Value.Equals(value)).Count() > 0;
+            return possibleValues.Any(pv => pv.Value.Equals(value));
         }
 
         private IEnumerable<string> VerifyRestrictions(string value, VariablesTypeVariableExternal_variable externalVariable)

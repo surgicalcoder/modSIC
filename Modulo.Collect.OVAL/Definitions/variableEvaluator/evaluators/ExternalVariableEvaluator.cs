@@ -60,11 +60,7 @@ namespace Modulo.Collect.OVAL.Definitions.VariableEvaluators.Evaluators
                 }
                 else
                 {
-                    foreach (var varValue in extvariable.value)
-                    {
-                        if (ValidateValue(variable.datatype, varValue))
-                            result.Add(varValue);
-                    }
+                    result.AddRange(extvariable.value.Where(varValue => ValidateValue(variable.datatype, varValue)));
                 }
             }
             return result;
@@ -75,7 +71,7 @@ namespace Modulo.Collect.OVAL.Definitions.VariableEvaluators.Evaluators
 
             bool isValid = false;
             var comparator = new Modulo.Collect.OVAL.Common.comparators.OvalComparatorFactory().GetComparator(datatype);
-            if ((variable.Items == null) || (variable.Items.Count() == 0))
+            if ((variable.Items == null) || (!variable.Items.Any()))
             {
                 isValid = true;
             }

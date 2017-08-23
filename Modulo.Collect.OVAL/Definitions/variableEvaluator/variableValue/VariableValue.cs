@@ -59,12 +59,7 @@ namespace Modulo.Collect.OVAL.Definitions.variableEvaluator
         /// <returns></returns>
         public IEnumerable<VariableValueType> ToOvalVariableType()
         {
-            List<VariableValueType> variables = new List<VariableValueType>();
-            foreach (string value in this.values)
-            {
-                variables.Add(this.CreateVariableValueTypeWithValue(value));
-            }
-            return variables;             
+            return this.values.Select(this.CreateVariableValueTypeWithValue).ToList();
         }
 
         private VariableValueType CreateVariableValueTypeWithValue(string value)

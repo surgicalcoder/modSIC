@@ -82,7 +82,7 @@ namespace Modulo.Collect.OVAL.Definitions.variableEvaluator
         {
             foreach (VariableValue variable in this.VariableValues)
             {
-                if (variable.values.Count() > 0)
+                if (variable.values.Any())
                 {
                     foreach (string value in variable.values)
                         if (string.IsNullOrEmpty(value))
