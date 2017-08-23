@@ -51,6 +51,11 @@ namespace Modulo.Collect.Probe.Common.BasicClasses
             this.Date = DateTime.Now;
         }
 
+        public override string ToString()
+        {
+            return $"[{Date}] [{Type}] {Message}";
+        }
+
         public DateTime Date { get; set; }
         public TypeItemLog Type { get; set; }
         public string Message { get; set; }
