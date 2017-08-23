@@ -39,9 +39,11 @@ using Modulo.Collect.OVAL.Definitions;
 using Modulo.Collect.OVAL.Common;
 using System.Windows.Forms;
 using System.Globalization;
+using System.IO;
 using Modulo.Collect.OVAL.Definitions.validators;
 using System.Xml;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Modulo.Collect.GraphicalConsole
 {
@@ -73,12 +75,12 @@ namespace Modulo.Collect.GraphicalConsole
 
         private void View_OnXCCDF(object sender, OnXCCDFEventArgs e)
         {
-            var doc = new XmlDocument();
-            doc.Load(e.Filename);
-            var nav = doc.CreateNavigator();
+            var readAllText = File.ReadAllText(e.Filename);
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(readAllText);
+            var json = JsonConvert.SerializeXmlNode(document);
 
-            var ns = new XmlNamespaceManager(doc.NameTable);
-            ns.AddNamespace("xccdf", "http://checklists.nist.gov/xccdf/1.2");
+            XCCDFParser.Container ee = JsonConvert.DeserializeObject<XCCDFParser.Container>(json);
 
             var helper = new ExternalVariableHelper();
             var dic = new Dictionary<string, string>();
@@ -92,7 +94,14 @@ namespace Modulo.Collect.GraphicalConsole
             {
                 try
                 {
-                    var value = nav.Evaluate("string(//xccdf:Value[@id= string(//xccdf:check-export[@export-name='" + item.Key + "']/@value-id)]/xccdf:value)", ns);
+                    var varId = ee.Benchmark.Group.FirstOrDefault(f => f.Rule.Check.CheckExportValueId == item.Key)?.Rule.Check.CheckExportVarId;
+                    var valueContainer = ee.Benchmark.Value.FirstOrDefault(a => a.Id == varId);
+                    var value = "";
+                    if (valueContainer != null)
+                    {
+                        value = valueContainer.Value.FirstOrDefault(b => b.DefaultValue).Selector;
+                    }
+
                     dic[item.Key] = value.ToString();
 
                     var control = controlDic[item.Key];
@@ -119,6 +128,21 @@ namespace Modulo.Collect.GraphicalConsole
                         {
                             (control as CheckBox).Checked = bool.Parse(value.ToString());
                         }));
+                    }
+                    else if (control is ComboBox combo)
+                    {
+                        var index = combo.Items.IndexOf(combo.Items.OfType<ComboBoxItem>()
+                            .FirstOrDefault(f => f.Value.ToString() == value.ToString()));
+                        combo.SelectedIndex = index;
+                    }
+                    else if (control is Panel panel)
+                    {
+                        var controls = panel.Controls.OfType<RadioButton>();
+
+                        controls.FirstOrDefault(r => r.Text == valueContainer.Value
+                                                         .FirstOrDefault(t => t.Text == value)
+                                                         .Selector)
+                            .Checked = true;
                     }
                     else
                     {
