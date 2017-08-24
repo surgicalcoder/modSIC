@@ -84,18 +84,26 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator
         private SetResult EvaluateSetElement(set setElement)
         {
             List<string> results = new List<string>();
-            List<string> objectReferences = setElement.GetObjectReferences();
-            List<sc.ObjectType> objectTypes = this.GetSystemCharacteristicsObjectType(objectReferences);
-            if (objectTypes.Any())
+            IEnumerable<string> objectReferences = setElement.GetObjectReferences();
+            IEnumerable<sc.ObjectType> objectTypes = this.GetSystemCharacteristicsObjectType(objectReferences);
+            if (objectTypes.Count() > 0)
             {
-                if (setElement.HasFilterElement())
+                var ofType = setElement.Items.OfType<filter>();
+                foreach (var filter in ofType)
                 {
-                    string filterValue = setElement.GetFilterValue();
+                    string filterValue = filter.Value;
                     objectTypes = filterEvaluator.ApplyFilter(objectTypes,filterValue);
                 }
+
+                //if (setElement.HasFilterElement())
+                //{
+                //    string filterValue = setElement.GetFilterValue();
+                //    objectTypes = filterEvaluator.ApplyFilter(objectTypes,filterValue);
+                //}
                 return this.ExecuteOperationForSetElement(setElement, objectTypes);
             }
-            return new SetResult(new List<String>(), FlagEnumeration.notcollected);
+            var setResult = new SetResult(new List<String>(), FlagEnumeration.notcollected);
+            return setResult;
         }
 
         /// <summary>
@@ -107,7 +115,7 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator
         /// <returns></returns>
         private SetResult EvaluateOtherSets(set setElement)
         {
-            List<set> otherSetsElements = setElement.GetSets();
+            IEnumerable<set> otherSetsElements = setElement.GetSets();
             SetResult resultFirstSet = this.Evaluate(otherSetsElements.First());
             SetResult resultSecondSet = new SetResult(new List<String>(), FlagEnumeration.notcollected);
             //the max number of set is 2 (reference: oval_definitions schema)
@@ -118,7 +126,8 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator
             SetOperation operation = this.GetOperation(setElement.set_operator);
             IEnumerable<string> results = operation.Execute(resultFirstSet.Result, resultSecondSet.Result);
             FlagEnumeration objectFlag = operation.GetObjectFlag(resultFirstSet.ObjectFlag, resultSecondSet.ObjectFlag);
-            return new SetResult(results, objectFlag);
+            var otherSets = new SetResult(results, objectFlag);
+            return otherSets;
         }
 
         
@@ -129,6 +138,10 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator
             IEnumerable<string> firstReferenceTypes = firstObjectType.GetReferenceTypesInString();
             IEnumerable<string> secondReferenceTypes = new List<string>();
             FlagEnumeration firstObjectFlag = firstObjectType.flag;
+
+            var test =
+                this.GetSystemCharacteristicsObjectType(setElement.Items.Skip(1).OfType<filter>().Select(e => e.Value));
+
             FlagEnumeration secondObjectFlag = FlagEnumeration.complete;
             if (objectTypes.Count() == MAX_NUMBER_OF_OBJECTS_IN_SET)
             {
@@ -149,9 +162,16 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator
             return new SetOperationFactory().CreateSetOperation(setOperator);
         }
 
-        private List<sc.ObjectType> GetSystemCharacteristicsObjectType(IEnumerable<string> objectReferences)
+        private IEnumerable<sc.ObjectType> GetSystemCharacteristicsObjectType(IEnumerable<string> objectReferences)
         {
-            return objectReferences.Select(objectReference => this.systemCharacteristics.GetCollectedObjectByID(objectReference)).Where(objectType => objectType != null).ToList();
+            List<sc.ObjectType> objectTypes = new List<sc::ObjectType>();
+            foreach (string objectReference in objectReferences)
+        {
+                sc.ObjectType objectType = this.systemCharacteristics.GetCollectedObjectByID(objectReference);
+                if (objectType != null)
+                    objectTypes.Add(objectType);
+            }
+            return objectTypes;
         }
     }
 }

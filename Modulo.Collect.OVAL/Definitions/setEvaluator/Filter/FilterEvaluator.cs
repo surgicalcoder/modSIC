@@ -57,7 +57,7 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator.Filter
             this.variables = variables;
         }       
 
-        public List<sc.ObjectType> ApplyFilter(IEnumerable<sc.ObjectType> objectTypes, string filterValue)
+        public IEnumerable<sc.ObjectType> ApplyFilter(IEnumerable<sc.ObjectType> objectTypes, string filterValue)
         {
             List<sc.ObjectType> objectAfterFilter = new List<sc.ObjectType>();
             foreach (var objectType in objectTypes)
@@ -70,39 +70,51 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator.Filter
         private List<sc.ObjectType> ApplyFilterInObjectType(string filterValue, sc.ObjectType objectType)
         {
             List<sc.ObjectType> objectTypesAfterFilter = new List<sc.ObjectType>();
-            List<string> referenceIds = objectType.GetReferenceTypesInString();
+            IEnumerable<string> referenceIds = objectType.GetReferenceTypesInString();
             foreach (string id in referenceIds)
             {
                 ItemType itemType = this.systemCharacteristics.GetSystemDataByReferenceId(id);
                 StateType state = this.GetStateById(filterValue);
+
                 StateTypeComparator comparator = new StateTypeComparator(state, itemType,this.variables);
-                if (comparator.IsEquals())
+
+                if (!comparator.IsEquals())
                 {
-                    RemoveReferenceID(objectType, id);
+                    this.AddObjectTypeInList(objectType, objectTypesAfterFilter);
                 }
                 else
                 {
-                    AddObjectTypeInList(objectType, objectTypesAfterFilter);
+                    this.RemoveReferenceID(objectType, objectTypesAfterFilter, id);
+
                 }
             }
             return objectTypesAfterFilter;
         }
 
-        private void RemoveReferenceID(sc.ObjectType objectType, string id)
+
+        private void RemoveReferenceID(sc.ObjectType objectType, List<sc.ObjectType> objectTypes, string id)
         {
+            Console.WriteLine("Need to remove " + id);
             var refs = objectType.reference.ToList(); refs.RemoveAll(e => e.item_ref == id);
             objectType.reference = refs.ToArray();
+            //sc.ObjectType existingObjectType = objectTypes.Where(obj => obj.id == objectType.id).SingleOrDefault();
+
+            //if (existingObjectType != null)
+            //{
+            //    objectTypes.Remove(existingObjectType);
+            //}
+
         }
 
         private StateType GetStateById(string stateId)
         {
-            StateType state = this.ovalDefinitionStates.SingleOrDefault(obj => obj.id == stateId);
+            StateType state = this.ovalDefinitionStates.Where(obj => obj.id == stateId).SingleOrDefault();
             return state;
         }
 
         private void AddObjectTypeInList(sc.ObjectType objectType, List<sc.ObjectType> objectTypes)
         {
-            sc.ObjectType existingObjectType = objectTypes.SingleOrDefault(obj => obj.id == objectType.id);
+            sc.ObjectType existingObjectType = objectTypes.Where(obj => obj.id == objectType.id).SingleOrDefault();
             if (existingObjectType == null)
             {
                 objectTypes.Add(objectType);
