@@ -94,8 +94,9 @@ namespace Modulo.Collect.OVAL.Definitions.setEvaluator.Filter
 
         private void RemoveReferenceID(sc.ObjectType objectType, List<sc.ObjectType> objectTypes, string id)
         {
-            Console.WriteLine("Need to remove " + id);
-            var refs = objectType.reference.ToList(); refs.RemoveAll(e => e.item_ref == id);
+            //Console.WriteLine("Need to remove " + id);
+            var refs = objectType.reference.ToList();
+            refs.RemoveAll(e => e.item_ref == id);
             objectType.reference = refs.ToArray();
             //sc.ObjectType existingObjectType = objectTypes.Where(obj => obj.id == objectType.id).SingleOrDefault();
 
