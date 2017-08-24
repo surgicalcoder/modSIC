@@ -310,15 +310,17 @@ namespace Modulo.Collect.Service.Controllers
                 }
                 catch (RecoverableProbeException ex)
                 {
+                    Logger.ErrorException("Error on probe", ex);
                     this.ConfigureTheCollectRequestWithAnErrorProbeExecute(collectRequest, probe.Capability.OvalObject, collectExecution, ex, executionLog);
                     session.SaveChanges();
-                    throw ex;
+                    throw;
                 }
                 catch (Exception ex)
                 {
+                    Logger.ErrorException("Error on probe", ex);
                     EndsACollectRequestBecauseThisErrorIsUnrecoverable(collectRequest, probe.Capability.OvalObject, collectExecution, ex, executionLog);
                     session.SaveChanges();
-                    throw ex;
+                    throw;
                 }
             }
 
