@@ -789,7 +789,7 @@ namespace Modulo.Collect.OVAL.Common
 
         private string product_versionField;
 
-        private decimal schema_versionField;
+        private Version schema_versionField;
 
         private System.DateTime timestampField;
 
@@ -826,7 +826,7 @@ namespace Modulo.Collect.OVAL.Common
             }
         }
 
-        public decimal schema_version
+        public Version schema_version
         {
             get
             {

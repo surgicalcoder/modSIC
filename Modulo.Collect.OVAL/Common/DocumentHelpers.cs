@@ -47,7 +47,7 @@ namespace Modulo.Collect.OVAL.Common
         /// <summary>
         /// Supported OVAL Language / Schema Version
         /// </summary>
-        public const decimal oval_schema_version = 5.9M;
+        public static Version oval_schema_version = new Version(5, 9);
 
         /// <summary>
         /// Creates and fill a "Generator" element for OVAL documents
