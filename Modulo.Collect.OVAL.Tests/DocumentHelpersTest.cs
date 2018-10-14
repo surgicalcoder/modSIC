@@ -100,7 +100,7 @@ namespace Modulo.Collect.OVAL.Tests
             Assert.IsTrue((generator.timestamp > dtJustBefore) && (generator.timestamp < dtJustAfter));
             Assert.IsFalse(string.IsNullOrEmpty(generator.product_name));
             Assert.IsFalse(string.IsNullOrEmpty(generator.product_version));
-            Assert.IsTrue(generator.schema_version >= (decimal)5.6);
+            Assert.IsTrue(generator.schema_version >= new Version(5,6));
         }
 
         /// <summary>

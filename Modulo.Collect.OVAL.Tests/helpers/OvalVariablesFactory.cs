@@ -71,7 +71,7 @@ namespace Modulo.Collect.OVAL.Tests.helpers
             {
                 product_name = "modSIC",
                 product_version = "1.0",
-                schema_version = new decimal(5.6),
+                schema_version = new Version(5,6),
                 timestamp = DateTime.Now
             };
         }
